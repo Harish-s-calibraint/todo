@@ -1,0 +1,27 @@
+
+.list{
+    margin-top: -90px;
+}
+.btn{
+    position: absolute;
+    margin:75px 30px;
+}
+
+
+.task-list{
+    margin: 120px auto;
+    
+}
+
+.task-ul{
+    list-style: none;
+    margin: auto;
+    padding: 0%;
+    
+}
+.singleTodo{
+    width: 500px;
+    border: solid 1px black;
+    padding: 5px 10px;
+    align-items: flex-start;
+}
