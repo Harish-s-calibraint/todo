@@ -1,40 +1,37 @@
-import {  Table } from "antd";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Table, Tag } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   CheckCircleOutlined,
 } from "@ant-design/icons";
-// import { useState } from "react";
-import "./taskList.css";
 import CreateTask from "../create Task/createTask";
-import { useDispatch, useSelector } from "react-redux";
 import { Actions } from "../../redux/actions/taskActions";
-// import { useState } from "react";
+import "./taskList.css";
 
 
 const TaskList = () => {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
 
-    // const[isEditing,setIsEditing]=useState(false);
-    // const[editingTask,setEditingTask]=useState(null)
+  const[initialValue,setInitialValue]=useState({});
 
-    const dataSource=useSelector((state)=>state.allTasks.task)
-    // console.log(dataSource);
+  
 
-//   const [dataSource, setDataSource] = useState(tasks);
+  const dataSource = useSelector((state) => state.allTasks.task);
 
+  useEffect(()=>{
+    console.log(dataSource);
+  },[dataSource])
 
-//     console.log(dataSource);
-//   [
-//     {
-//       taskNumber: "",
-//       taskName:"",
-//       date: "",
-//       category: "",
-//       status: "",
-//       Actions: "",
-//     },
-//   ]
+  const setValues= (index)=>{
+    if(dataSource[index].status!=="Completed"){
+      dataSource[index].index=index
+
+      setInitialValue(dataSource[index]);
+    }
+    
+  }
 
   const columns = [
     {
@@ -60,21 +57,27 @@ const TaskList = () => {
     {
       key: "5",
       title: "Status",
+      render:(record)=>{
+        return <Tag color={record==="Completed" ? "green" : "orange"}>{record}</Tag>
+      },
       dataIndex: "status",
     },
     {
       key: "6",
       title: "Actions",
-      render: (record) => {
+      render: (id,record,index) => {
         return (
           <>
-            <EditOutlined onClick={()=> dispatch(Actions.EditTask(record)) }/>
-            <DeleteOutlined onClick={()=> dispatch(Actions.DeleteTask(record))} style={{ marginLeft: "20px" }} />
+            <EditOutlined onClick={()=>setValues(index)} />
+            <DeleteOutlined
+              onClick={() => {dispatch(Actions.DeleteTask(index))}}
+              style={{ marginLeft: "20px" }}
+            />
             <CheckCircleOutlined
               style={{ marginLeft: "20px" }}
-            //   disabled={true}
-              // onClick={()=> { dispatch(Actions.CompleteTask(record))}}
-          
+              onClick={() => {
+                dispatch(Actions.CompleteTask(index));
+              }}
             />
           </>
         );
@@ -82,36 +85,15 @@ const TaskList = () => {
       dataIndex: "actions",
     },
   ];
-  // const onEditTask=(record)=>{
-  //    setIsEditing(true);
-  //    setEditingTask({...record});
-  // };
-  // const resetEditing=()=>{
-  //   setIsEditing(false);
-  //   setEditingTask(null);
-  // }
 
   return (
     <>
-      <CreateTask />
+      <CreateTask initialValue={initialValue} clearValues={()=>{setInitialValue({})}} />
 
       <div className="list"></div>
       <div className="task-list">
         <Table columns={columns} dataSource={dataSource}></Table>
-        {/* <Modal
-        title="Edit task"
-        visible={isEditing}
-        okText="Save"
-        onCancel={() => {
-          resetEditing();
-        }}
-        onOk={() => {
-
-          return 
-        }}
-        >
-
-        </Modal> */}
+       
       </div>
     </>
   );

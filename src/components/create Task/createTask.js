@@ -1,13 +1,10 @@
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Form, Input, Button, Select, DatePicker } from "antd";
 import moment from "moment";
-import { useDispatch } from "react-redux";
 import { Actions } from "../../redux/actions/taskActions";
 
-
-
 const { Option } = Select;
-
-
 
 const categoryList = [
   "House-Hold",
@@ -18,29 +15,52 @@ const categoryList = [
   "Miscellaneous",
 ];
 
-    let number=1
-const CreateTask = () => {
+let number = 1;
+const CreateTask = (props) => {
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
+
+  const [initialValue, setInitialValue] = useState(props.initialValue);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      taskName: props.initialValue.taskName,
+      category: props.initialValue.category,
+    });
+  }, [props.initialValue]);
 
   const handleSubmit = (e) => {
-    // console.log(e);
-    e.taskNumber=number
-    e.date= new Date(e.date._d).toISOString().split('T')[0].split("-").reverse().join("/") 
-    e.status="pending"
-    e.actions=Date.now()
+    e.date = new Date(e.date._d)
+      .toISOString()
+      .split("T")[0]
+      .split("-")
+      .reverse()
+      .join("/");
+    e.status = "pending";
+    if (props.initialValue.taskNumber) {
+      e.index = props.initialValue.index;
+      e.taskNumber = props.initialValue.taskNumber;
+      dispatch(Actions.EditTask(e));
+      props.clearValues();
+    } else {
+      e.actions = Date.now();
+      e.taskNumber = number;
+      number += 1;
 
+      dispatch(Actions.AddTask(e));
 
-    dispatch(Actions.AddTask(e));
-    
-     number+=1;
+    }
+    form.resetFields();
   };
 
   return (
     <>
       <div className="create-task-form">
         <Form
-            onFinish={handleSubmit}
-            style={{ width: "600px", margin: "100px auto", top: "50px" }}
+          onFinish={handleSubmit}
+          form={form}
+          name="control-hooks"
+          style={{ width: "600px", margin: "100px auto", top: "50px" }}
         >
           <Form.Item
             name="taskName"
@@ -89,7 +109,7 @@ const CreateTask = () => {
             style={{ width: "300px" }}
           >
             <DatePicker
-             disabledDate={(current) => {
+              disabledDate={(current) => {
                 const customDate = moment().format("YYYY-MM-DD");
                 return current && current < moment(customDate, "YYYY-MM-DD");
               }}
@@ -101,7 +121,7 @@ const CreateTask = () => {
 
           <Form.Item style={{ width: "150px" }}>
             <Button block type="primary" htmlType="submit">
-              Add Task
+              {props.initialValue.taskNumber ? "Edit" : "Add"} Task
             </Button>
           </Form.Item>
         </Form>

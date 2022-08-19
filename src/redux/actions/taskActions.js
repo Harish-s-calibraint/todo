@@ -6,8 +6,9 @@ export const Actions ={
 AddTask  : (task) =>  (
      {
         type:ActionTypes.ADD_TASK,
-        payload:task
+        payload:task,
     }
+    
 ),
 
 DeleteTask : (task) =>  (
