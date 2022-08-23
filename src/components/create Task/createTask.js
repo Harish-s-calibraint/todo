@@ -34,7 +34,6 @@ const CreateTask = (props) => {
 
 
   useEffect(() => {
-    // console.log(moment(props.initialValue.date))
 
     form.setFieldsValue({
       taskName: taskName,
@@ -47,16 +46,14 @@ const CreateTask = (props) => {
 
   const handleSubmit = (e) => {
     e.date = moment(e.date._d)
-    // console.log(e.date);
 
-    // console.log(e.date);
     // e.date = new Date(e.date._d)
       // e.date = new Date(e.date)
       // .toISOString()
       // .split("T")[0]
       // .split("-")
       // .reverse()
-      // .join("/");
+      // .join("/"); // date feature format
     e.status = "pending";
     if (taskNumber) {
       dispatch(Actions.EditTask({...e,index:current,taskNumber:taskNumber}));

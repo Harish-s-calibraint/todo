@@ -45,9 +45,7 @@ const TaskList = () => {
       key: "3",
       title: "Date",
       dataIndex: "date",
-      render:(record)=>{
-        // console.log(record);
-        
+      render:(record)=>{        
         return <div>{moment(record).format("YYYY-MM-DD")}</div>
       },
     },
