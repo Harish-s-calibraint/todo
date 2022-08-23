@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { Form, Input, Button, Select, DatePicker } from "antd";
 import moment from "moment";
 import { Actions } from "../../redux/actions/taskActions";
+import './createTask.css'
+
 
 const { Option } = Select;
 
@@ -15,35 +17,51 @@ const categoryList = [
   "Miscellaneous",
 ];
 
-let number = 1;
+
+let number=1;
+
 const CreateTask = (props) => {
-  const dispatch = useDispatch();
-  const [form] = Form.useForm();
 
   const [initialValue, setInitialValue] = useState(props.initialValue);
 
+
+  const {taskName,taskNumber,category,date,current}=props.initialValue;
+ console.log(current);
+
+
+  const dispatch = useDispatch();
+  const [form] = Form.useForm();
+
+
   useEffect(() => {
+    // console.log(moment(props.initialValue.date))
+
     form.setFieldsValue({
-      taskName: props.initialValue.taskName,
-      category: props.initialValue.category,
+      taskName: taskName,
+      category: category,
+      date:date ? moment(date):""
     });
   }, [props.initialValue]);
 
+
+
   const handleSubmit = (e) => {
-    e.date = new Date(e.date._d)
-      .toISOString()
-      .split("T")[0]
-      .split("-")
-      .reverse()
-      .join("/");
+    e.date = moment(e.date._d)
+    // console.log(e.date);
+
+    // console.log(e.date);
+    // e.date = new Date(e.date._d)
+      // e.date = new Date(e.date)
+      // .toISOString()
+      // .split("T")[0]
+      // .split("-")
+      // .reverse()
+      // .join("/");
     e.status = "pending";
-    if (props.initialValue.taskNumber) {
-      e.index = props.initialValue.index;
-      e.taskNumber = props.initialValue.taskNumber;
-      dispatch(Actions.EditTask(e));
+    if (taskNumber) {
+      dispatch(Actions.EditTask({...e,index:current,taskNumber:taskNumber}));
       props.clearValues();
     } else {
-      e.actions = Date.now();
       e.taskNumber = number;
       number += 1;
 
@@ -55,12 +73,11 @@ const CreateTask = (props) => {
 
   return (
     <>
-      <div className="create-task-form">
+      <div className="create-task-form ">
         <Form
           onFinish={handleSubmit}
           form={form}
           name="control-hooks"
-          style={{ width: "600px", margin: "100px auto", top: "50px" }}
         >
           <Form.Item
             name="taskName"
@@ -91,9 +108,8 @@ const CreateTask = (props) => {
             ]}
           >
             <Select placeholder="Category">
-              {categoryList.map((value) => {
-                return <Option value={value}>{value}</Option>;
-              })}
+        
+              {categoryList.map((value) => <Option value={value}>{value}</Option>)}
             </Select>
           </Form.Item>
 
@@ -121,7 +137,7 @@ const CreateTask = (props) => {
 
           <Form.Item style={{ width: "150px" }}>
             <Button block type="primary" htmlType="submit">
-              {props.initialValue.taskNumber ? "Edit" : "Add"} Task
+              {taskNumber ? "Edit" : "Add"} Task
             </Button>
           </Form.Item>
         </Form>
@@ -129,5 +145,7 @@ const CreateTask = (props) => {
     </>
   );
 };
+
+
 
 export default CreateTask;

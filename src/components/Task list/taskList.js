@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Table, Tag } from "antd";
 import {
@@ -9,6 +9,7 @@ import {
 import CreateTask from "../create Task/createTask";
 import { Actions } from "../../redux/actions/taskActions";
 import "./taskList.css";
+import moment from "moment";
 
 
 const TaskList = () => {
@@ -20,13 +21,9 @@ const TaskList = () => {
 
   const dataSource = useSelector((state) => state.allTasks.task);
 
-  useEffect(()=>{
-    console.log(dataSource);
-  },[dataSource])
-
   const setValues= (index)=>{
     if(dataSource[index].status!=="Completed"){
-      dataSource[index].index=index
+      dataSource[index].current=index
 
       setInitialValue(dataSource[index]);
     }
@@ -48,6 +45,11 @@ const TaskList = () => {
       key: "3",
       title: "Date",
       dataIndex: "date",
+      render:(record)=>{
+        // console.log(record);
+        
+        return <div>{moment(record).format("YYYY-MM-DD")}</div>
+      },
     },
     {
       key: "4",
@@ -58,7 +60,14 @@ const TaskList = () => {
       key: "5",
       title: "Status",
       render:(record)=>{
+        // console.log(record);
+        //   const taskDate =new Date(record).getTime
+        //   const dateNow=Date.now()
+        //   // const taskStatus=""
+        //   {(taskDate<dateNow) ? record="Overdue" : record="Pending"} // working on with overdue feature
+
         return <Tag color={record==="Completed" ? "green" : "orange"}>{record}</Tag>
+        
       },
       dataIndex: "status",
     },

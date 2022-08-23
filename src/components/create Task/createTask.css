@@ -1,4 +1,8 @@
 .create-task-form{
     
     align-items: center;
+    width: 600px;
+    margin: 100px auto;
+   top: 50px;
 }
+

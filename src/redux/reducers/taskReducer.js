@@ -10,13 +10,12 @@ export const taskReducer = (state = initialState, action) => {
       return { task: [...state.task, action.payload] };
 
     case ActionTypes.DELETE_TASK:
-      // let data = [...state.task];
-      // data.splice(action.payload, 1);
+     
       state.task.splice(action.payload, 1);
       return { task: [...state.task] };
 
     case ActionTypes.COMPLETE_TASK:
-      let dataC = [...state.task];
+      const dataC = [...state.task];
 
       dataC[action.payload].status = "Completed";
   
@@ -25,7 +24,7 @@ export const taskReducer = (state = initialState, action) => {
       };
 
     case ActionTypes.EDIT_TASK:
-      let dataE = [...state.task];
+      const dataE = [...state.task];
       dataE[action.payload.index] = action.payload;
 
       return { task: dataE };
