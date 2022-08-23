@@ -22,7 +22,6 @@ const CreateTask = (props) => {
   const [initialValue, setInitialValue] = useState(props.initialValue);
 
   const { taskName, taskNumber, category, date, current } = props.initialValue;
-  console.log(current);
 
   const dispatch = useDispatch();
   const [form] = Form.useForm();
