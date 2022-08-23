@@ -3,8 +3,7 @@ import { useDispatch } from "react-redux";
 import { Form, Input, Button, Select, DatePicker } from "antd";
 import moment from "moment";
 import { Actions } from "../../redux/actions/taskActions";
-import './createTask.css'
-
+import "./createTask.css";
 
 const { Option } = Select;
 
@@ -17,53 +16,39 @@ const categoryList = [
   "Miscellaneous",
 ];
 
-
-let number=1;
+let number = 1;
 
 const CreateTask = (props) => {
-
   const [initialValue, setInitialValue] = useState(props.initialValue);
 
-
-  const {taskName,taskNumber,category,date,current}=props.initialValue;
- console.log(current);
-
+  const { taskName, taskNumber, category, date, current } = props.initialValue;
+  console.log(current);
 
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-
   useEffect(() => {
-
     form.setFieldsValue({
       taskName: taskName,
       category: category,
-      date:date ? moment(date):""
+      date: date ? moment(date) : "",
     });
   }, [props.initialValue]);
 
-
-
   const handleSubmit = (e) => {
-    e.date = moment(e.date._d)
-
-    // e.date = new Date(e.date._d)
-      // e.date = new Date(e.date)
-      // .toISOString()
-      // .split("T")[0]
-      // .split("-")
-      // .reverse()
-      // .join("/"); // date feature format
     e.status = "pending";
+
     if (taskNumber) {
-      dispatch(Actions.EditTask({...e,index:current,taskNumber:taskNumber}));
+      dispatch(
+        Actions.EditTask({ ...e, index: current, taskNumber: taskNumber })
+      );
       props.clearValues();
     } else {
+      e.date = moment(e.date._d);
       e.taskNumber = number;
       number += 1;
 
       dispatch(Actions.AddTask(e));
-
     }
     form.resetFields();
   };
@@ -71,11 +56,7 @@ const CreateTask = (props) => {
   return (
     <>
       <div className="create-task-form ">
-        <Form
-          onFinish={handleSubmit}
-          form={form}
-          name="control-hooks"
-        >
+        <Form onFinish={handleSubmit} form={form} name="control-hooks">
           <Form.Item
             name="taskName"
             label="Task Name"
@@ -105,8 +86,9 @@ const CreateTask = (props) => {
             ]}
           >
             <Select placeholder="Category">
-        
-              {categoryList.map((value) => <Option value={value}>{value}</Option>)}
+              {categoryList.map((value) => (
+                <Option value={value}>{value}</Option>
+              ))}
             </Select>
           </Form.Item>
 
@@ -142,7 +124,5 @@ const CreateTask = (props) => {
     </>
   );
 };
-
-
 
 export default CreateTask;

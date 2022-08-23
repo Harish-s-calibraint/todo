@@ -10,24 +10,18 @@ export const taskReducer = (state = initialState, action) => {
       return { task: [...state.task, action.payload] };
 
     case ActionTypes.DELETE_TASK:
-     
       state.task.splice(action.payload, 1);
       return { task: [...state.task] };
 
     case ActionTypes.COMPLETE_TASK:
-      const dataC = [...state.task];
+      state.task[action.payload].status = "Completed";
 
-      dataC[action.payload].status = "Completed";
-  
-      return {
-        task: dataC,
-      };
+      return { task: [...state.task] };
 
     case ActionTypes.EDIT_TASK:
-      const dataE = [...state.task];
-      dataE[action.payload.index] = action.payload;
+      state.task[action.payload.index] = action.payload;
 
-      return { task: dataE };
+      return { task: [...state.task] };
 
     default:
       return state;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { Table, Tag } from "antd";
 import {
@@ -9,26 +10,21 @@ import {
 import CreateTask from "../create Task/createTask";
 import { Actions } from "../../redux/actions/taskActions";
 import "./taskList.css";
-import moment from "moment";
-
 
 const TaskList = () => {
   const dispatch = useDispatch();
 
-  const[initialValue,setInitialValue]=useState({});
+  const [initialValue, setInitialValue] = useState({});
 
-  
+  const taskDetails = useSelector((state) => state.allTasks.task);
 
-  const dataSource = useSelector((state) => state.allTasks.task);
+  const setValues = (index) => {
+    if (taskDetails[index].status !== "Completed") {
+      taskDetails[index].current = index;
 
-  const setValues= (index)=>{
-    if(dataSource[index].status!=="Completed"){
-      dataSource[index].current=index
-
-      setInitialValue(dataSource[index]);
+      setInitialValue(taskDetails[index]);
     }
-    
-  }
+  };
 
   const columns = [
     {
@@ -45,8 +41,8 @@ const TaskList = () => {
       key: "3",
       title: "Date",
       dataIndex: "date",
-      render:(record)=>{        
-        return <div>{moment(record).format("YYYY-MM-DD")}</div>
+      render: (record) => {
+        return <div>{moment(record).format("YYYY-MM-DD")}</div>;
       },
     },
     {
@@ -57,27 +53,32 @@ const TaskList = () => {
     {
       key: "5",
       title: "Status",
-      render:(record)=>{
+      render: (record) => {
         // console.log(record);
         //   const taskDate =new Date(record).getTime
         //   const dateNow=Date.now()
         //   // const taskStatus=""
         //   {(taskDate<dateNow) ? record="Overdue" : record="Pending"} // working on with overdue feature
 
-        return <Tag color={record==="Completed" ? "green" : "orange"}>{record}</Tag>
-        
+        return (
+          <Tag color={record === "Completed" ? "green" : "orange"}>
+            {record}
+          </Tag>
+        );
       },
       dataIndex: "status",
     },
     {
       key: "6",
       title: "Actions",
-      render: (id,record,index) => {
+      render: (id, record, index) => {
         return (
           <>
-            <EditOutlined onClick={()=>setValues(index)} />
+            <EditOutlined onClick={() => setValues(index)} />
             <DeleteOutlined
-              onClick={() => {dispatch(Actions.DeleteTask(index))}}
+              onClick={() => {
+                dispatch(Actions.DeleteTask(index));
+              }}
               style={{ marginLeft: "20px" }}
             />
             <CheckCircleOutlined
@@ -95,12 +96,14 @@ const TaskList = () => {
 
   return (
     <>
-      <CreateTask initialValue={initialValue} clearValues={()=>{setInitialValue({})}} />
-
-      <div className="list"></div>
+      <CreateTask
+        initialValue={initialValue}
+        clearValues={() => {
+          setInitialValue({});
+        }}
+      />
       <div className="task-list">
-        <Table columns={columns} dataSource={dataSource}></Table>
-       
+        <Table columns={columns} dataSource={taskDetails}></Table>
       </div>
     </>
   );
