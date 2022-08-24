@@ -17,7 +17,7 @@ const TaskList = () => {
   const taskDetails = useSelector((state) => state.allTasks.task);
 
   const setValues = (index) => {
-    if (taskDetails[index].status !== "Completed") {
+    if (!taskDetails[index].status) {
       taskDetails[index].current = index;
 
       setInitialValue(taskDetails[index]);
