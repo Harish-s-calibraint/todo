@@ -14,8 +14,8 @@ const categoryList = [
   "Occassions",
   "Miscellaneous",
 ];
-  let number = 1;
-  const CreateTask = (props) => {
+let number = 1;
+const CreateTask = (props) => {
   const [initialValue, setInitialValue] = useState(props.initialValue);
   const { taskName, taskNumber, category, date, current } = props.initialValue;
   const dispatch = useDispatch();
@@ -30,20 +30,28 @@ const categoryList = [
   }, [props.initialValue]);
 
   const handleSubmit = (e) => {
-
     if (taskNumber) {
       dispatch(
-        Actions.EditTask({ ...e, index: current, taskNumber: taskNumber})
+        Actions.EditTask({
+          ...e,
+          index: current,
+          taskNumber: taskNumber,
+          date: moment(e.date).format("YYYY-MM-DD"),
+        })
       );
       props.clearValues();
     } else {
-      e.date = moment(e.date._d);
+      e.date = moment(e.date).format("YYYY-MM-DD");
       e.taskNumber = number;
       number += 1;
 
       dispatch(Actions.AddTask(e));
     }
     form.resetFields();
+  };
+
+  const disabledDate = (current) => {
+    return current && current.isBefore (moment().startOf('day'));
   };
 
   return (
@@ -96,17 +104,14 @@ const categoryList = [
             ]}
           >
             <DatePicker
-            className="datePicker"
-              disabledDate={(current) => {
-                const customDate = moment().format("YYYY-MM-DD");
-                return current && current < moment(customDate, "YYYY-MM-DD");
-              }}
+              className="datePicker"
+              disabledDate={disabledDate}
               picker="date"
               placeholder="Completion date"
             />
           </Form.Item>
 
-          <Form.Item >
+          <Form.Item>
             <Button id="btn" block type="primary" htmlType="submit">
               {taskNumber ? "Edit" : "Add"} Task
             </Button>

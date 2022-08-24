@@ -52,9 +52,12 @@ const TaskList = () => {
       key: "5",
       title: "Status",
       render: (item, record) => {
-        const taskDate = new Date(record.date._d).getTime();
-        const dateNow = Date.now();
-        const taskStatus = item ? "Completed" : taskDate >= dateNow ? "Pending" : "Overdue";
+        const taskDate = moment(record.date).isAfter(moment());
+        const taskStatus = item
+          ? "Completed"
+          : taskDate
+          ? "Pending"
+          : "Overdue";
         let color;
         switch (taskStatus) {
           case "Pending":
@@ -89,7 +92,6 @@ const TaskList = () => {
               className="actions-btn"
               onClick={() => {
                 dispatch(Actions.CompleteTask(index));
-
               }}
             />
           </>
