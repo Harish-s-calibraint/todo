@@ -13,9 +13,7 @@ import "./taskList.css";
 
 const TaskList = () => {
   const dispatch = useDispatch();
-
   const [initialValue, setInitialValue] = useState({});
-
   const taskDetails = useSelector((state) => state.allTasks.task);
 
   const setValues = (index) => {
@@ -53,18 +51,24 @@ const TaskList = () => {
     {
       key: "5",
       title: "Status",
-      render: (record) => {
-        // console.log(record);
-        //   const taskDate =new Date(record).getTime
-        //   const dateNow=Date.now()
-        //   // const taskStatus=""
-        //   {(taskDate<dateNow) ? record="Overdue" : record="Pending"} // working on with overdue feature
+      render: (item, record) => {
+        const taskDate = new Date(record.date._d).getTime();
+        const dateNow = Date.now();
+        const taskStatus = item ? "Completed" : taskDate >= dateNow ? "Pending" : "Overdue";
+        let color;
+        switch (taskStatus) {
+          case "Pending":
+            color = "orange";
+            break;
 
-        return (
-          <Tag color={record === "Completed" ? "green" : "orange"}>
-            {record}
-          </Tag>
-        );
+          case "Overdue":
+            color = "red";
+            break;
+          default:
+            color = "green";
+            break;
+        }
+        return <Tag color={color}>{taskStatus}</Tag>;
       },
       dataIndex: "status",
     },
@@ -79,12 +83,13 @@ const TaskList = () => {
               onClick={() => {
                 dispatch(Actions.DeleteTask(index));
               }}
-              style={{ marginLeft: "20px" }}
+              className="actions-btn"
             />
             <CheckCircleOutlined
-              style={{ marginLeft: "20px" }}
+              className="actions-btn"
               onClick={() => {
                 dispatch(Actions.CompleteTask(index));
+
               }}
             />
           </>

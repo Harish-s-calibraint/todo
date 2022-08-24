@@ -6,7 +6,6 @@ import { Actions } from "../../redux/actions/taskActions";
 import "./createTask.css";
 
 const { Option } = Select;
-
 const categoryList = [
   "House-Hold",
   "Office",
@@ -15,14 +14,10 @@ const categoryList = [
   "Occassions",
   "Miscellaneous",
 ];
-
-let number = 1;
-
-const CreateTask = (props) => {
+  let number = 1;
+  const CreateTask = (props) => {
   const [initialValue, setInitialValue] = useState(props.initialValue);
-
   const { taskName, taskNumber, category, date, current } = props.initialValue;
-
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
@@ -35,11 +30,10 @@ const CreateTask = (props) => {
   }, [props.initialValue]);
 
   const handleSubmit = (e) => {
-    e.status = "pending";
 
     if (taskNumber) {
       dispatch(
-        Actions.EditTask({ ...e, index: current, taskNumber: taskNumber })
+        Actions.EditTask({ ...e, index: current, taskNumber: taskNumber})
       );
       props.clearValues();
     } else {
@@ -72,11 +66,10 @@ const CreateTask = (props) => {
           </Form.Item>
 
           <Form.Item
+            className="form-item"
             name="category"
             label="Category"
             required
-            tooltip="Please pick a category"
-            style={{ width: "300px" }}
             rules={[
               {
                 required: true,
@@ -92,6 +85,7 @@ const CreateTask = (props) => {
           </Form.Item>
 
           <Form.Item
+            className="form-item"
             name="date"
             label="Completion Date"
             rules={[
@@ -100,21 +94,20 @@ const CreateTask = (props) => {
                 message: "Please provide a task completion date",
               },
             ]}
-            style={{ width: "300px" }}
           >
             <DatePicker
+            className="datePicker"
               disabledDate={(current) => {
                 const customDate = moment().format("YYYY-MM-DD");
                 return current && current < moment(customDate, "YYYY-MM-DD");
               }}
-              style={{ width: "100%" }}
               picker="date"
               placeholder="Completion date"
             />
           </Form.Item>
 
-          <Form.Item style={{ width: "150px" }}>
-            <Button block type="primary" htmlType="submit">
+          <Form.Item >
+            <Button id="btn" block type="primary" htmlType="submit">
               {taskNumber ? "Edit" : "Add"} Task
             </Button>
           </Form.Item>

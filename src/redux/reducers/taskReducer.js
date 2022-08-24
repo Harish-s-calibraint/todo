@@ -14,7 +14,7 @@ export const taskReducer = (state = initialState, action) => {
       return { task: [...state.task] };
 
     case ActionTypes.COMPLETE_TASK:
-      state.task[action.payload].status = "Completed";
+      state.task[action.payload].status = true;
 
       return { task: [...state.task] };
 

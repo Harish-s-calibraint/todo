@@ -1,8 +1,16 @@
-.create-task-form{
-    
-    align-items: center;
-    width: 600px;
-    margin: 100px auto;
-   top: 50px;
+.create-task-form {
+  align-items: center;
+  width: 600px;
+  margin: 100px auto;
+  top: 50px;
 }
-
+.form-item {
+  width: 300px;
+}
+#btn {
+  width: 150px;
+  margin-top: 20px;
+}
+.datePicker {
+  width: 100%;
+}
