@@ -1,0 +1,13 @@
+.container{
+    margin:100px auto;
+    width:800px;
+    align-items: center;
+}
+
+.header{
+    position: absolute;
+    color:white;
+    font-size:30px;
+    margin:auto;
+    width: 800px;
+}
